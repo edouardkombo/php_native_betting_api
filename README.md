@@ -15,19 +15,32 @@ Those who know me, know that if I had the choice to use a framework, I would hav
 2. cd /var/www/php_native_betting_api/api/ && composer install
 2. cd /var/www/php_native_betting_api/api/database
 3. Create your Mysql database
-   ubuntu:/var/www/php_native_betting_api/api/database$ mysql -u ? -p
-   mysql> CREATE DATABASE api;
-   mysql> exit;
-   ubuntu:/var/www/php_native_betting_api/api/database$ mysql -u ? -p api < api.sql
+
+ubuntu:/var/www/php_native_betting_api/api/database$ mysql -u ? -p
+
+mysql> CREATE DATABASE api;
+
+mysql> exit;
+
+ubuntu:/var/www/php_native_betting_api/api/database$ mysql -u ? -p api < api.sql
+
 4. Insert dummy data
-   mysql> use api;
-   mysql> INSERT INTO credential (username,password) VALUES ("sledge00","81dc9bdb52d04dc20036dbd8313ed055");
-   mysql> INSERT INTO wallet (balance) VALUES (300);
-   mysql> INSERT INTO currency (name,code) VALUES ("Euro","EUR");
-   mysql> INSERT INTO finance_type (name) VALUES ("Deposit"),("Withdrawal"),("Bet");
-   mysql> INSERT INTO player (wallet_id,credential_id,currency_id) VALUES (1,1,1);
-   mysql> UPDATE wallet SET player_id=1 WHERE id=1;
-   mysql> UPDATE credential SET player_id=1 WHERE id=1;
+
+mysql> use api;
+
+mysql> INSERT INTO credential (username,password) VALUES ("sledge00","81dc9bdb52d04dc20036dbd8313ed055");
+
+mysql> INSERT INTO wallet (balance) VALUES (300);
+
+mysql> INSERT INTO currency (name,code) VALUES ("Euro","EUR");
+
+mysql> INSERT INTO finance_type (name) VALUES ("Deposit"),("Withdrawal"),("Bet");
+
+mysql> INSERT INTO player (wallet_id,credential_id,currency_id) VALUES (1,1,1);
+
+mysql> UPDATE wallet SET player_id=1 WHERE id=1;
+
+mysql> UPDATE credential SET player_id=1 WHERE id=1;
 
 ## How does it work
 
