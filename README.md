@@ -42,6 +42,11 @@ mysql> UPDATE wallet SET player_id=1 WHERE id=1;
 
 mysql> UPDATE credential SET player_id=1 WHERE id=1;
 
+## Use Nginx
+
+1. cp /var/www/php_native_betting/nginx /etc/nginx/sites-enabled/nginx
+2. Open the file and change your domain name accordingly
+
 ## How does it work
 
 Only POST method is supported for now, and only JSON response.
@@ -53,13 +58,16 @@ To use it, better to play with POSTMAN.
 ![GET method](https://raw.githubusercontent.com/edouardkombo/php_native_betting_api/master/api/database/api.png)
 
 
-1. Once you setup your server, point it to "api/index.php".
-2. We listen to two routes "login" and "api"
-3. To login, POST (username:sledge00, password:1234)
-4. To bet. POST (amount:xxxx, finance_type:3), 3 here stands for bets
+1. Once you setup your Nginx server, ensure it points to to "api/index.php".
+2. We listen to two url parameters only "?login" and "?bet"
+3. To login and bet, play with Postman as per the screenshots below
+![Login failed](https://raw.githubusercontent.com/edouardkombo/php_native_betting_api/master/img/login_failed.png)
+![Login success](https://raw.githubusercontent.com/edouardkombo/php_native_betting_api/master/img/login_success.png)
+![Bet failed](https://raw.githubusercontent.com/edouardkombo/php_native_betting_api/master/img/bet_not_enough_balance.png)
+![Bet successful](https://raw.githubusercontent.com/edouardkombo/php_native_betting_api/master/img/bet_successful.png)
 
 In case of successful request, a 200 status code with matching body will be sent as JSON.
-In case of unsuccessful request, a 400 status code without body will be sent as JSON.
+In case of unsuccessful request, a 400 status code with  body will be sent as JSON.
 
 Better explanation is available on my medium account here https://edouard-kombo.medium.com/build-a-simple-betting-api-in-native-php-032e098c9c7d
 

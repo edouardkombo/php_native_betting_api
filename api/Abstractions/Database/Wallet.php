@@ -4,7 +4,7 @@ namespace Api\Abstractions\Database;
 
 use Api\Abstractions\Http;
 use Api\Utils\BoolResponse;
-use Api\utils\QueryResponse;
+use Api\Utils\QueryResponse;
 use Api\Utils\Session;
 
 abstract class Wallet extends Http

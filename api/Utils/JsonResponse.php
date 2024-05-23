@@ -10,9 +10,16 @@ class JsonResponse extends GetterSetter
     {
 	$result = [];
         if(!empty($body))
-        {
-            $result = array('status' => 200, 'body' => $body);
-        } else {
+	{
+            if (is_array($body))
+	    {
+                $result = array('status' => 200, 'body' => $body);
+	    }
+	    else
+	    {
+	        $result = array('status' => 404, 'body' => $body);
+	    }    
+	} else {
             $result = array('status' => 404);
 	}
 

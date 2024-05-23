@@ -1,0 +1,60 @@
+server {
+    listen       443;
+    listen       80;
+    server_name  ?.com;
+    root         /var/www/php_native_betting_api/api;
+
+    access_log /var/log/nginx/?-access.log;
+    error_log  /var/log/nginx/?-error.log error;
+    index index.php;
+
+    add_header  X-Frame-Options "SAMEORIGIN" always;
+    add_header Content-Security-Policy "frame-ancestors 'self';";
+
+    location / {
+        add_header 'Access-Control-Allow-Origin' '*';
+        add_header 'Access-Control-Allow-Credentials' 'true';
+        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+        add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_redirect off;
+        proxy_http_version 1.1;
+
+        proxy_set_header Upgrade $http_upgrade;
+    	proxy_set_header Connection "upgrade";
+        proxy_read_timeout 86400;
+    }
+
+    location ~ ^/index\.php(/|$) {
+        # when using PHP-FPM as a unix socket
+        fastcgi_pass unix:/var/run/php/php8.1-fpm.sock;
+
+        # when PHP-FPM is configured to use TCP
+        # fastcgi_pass 127.0.0.1:9000;
+
+        fastcgi_split_path_info ^(.+\.php)(/.*)$;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        fastcgi_param DOCUMENT_ROOT $realpath_root;
+        # Prevents URIs that include the front controller. This will 404:
+        # http://example.com/index.php/some-path
+        # Remove the internal directive to allow URIs like this
+        internal;
+    }
+
+    # return 404 for all other php files not matching the front controller
+    # this prevents access to other php files you don't want to be accessible.
+    location ~ \.php$ {
+        return 404;
+    }
+
+    # deny access to .htaccess files, if Apache's document root
+    # concurs with nginx's one
+    location ~ /\.ht {
+        deny all;
+    }
+}

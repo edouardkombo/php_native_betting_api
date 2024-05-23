@@ -16,7 +16,7 @@ class Credential extends CredentialAbstraction
     public function authenticate()
     {
         $data = $this->get();
-        $result = [];
+        $result = "User not found!";
 
 	if (!empty($data))
 	{

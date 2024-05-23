@@ -27,19 +27,19 @@ $route  = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD'];
 $route = substr($route, 1);
 $route = explode("?", $route);
-$route = explode("/", $route[0]);
+$route = explode("/", $route[1]);
 $route = array_values($route);
 
-if (count($route) <= 2) {
 
+if (count($route) <= 2) {
     switch ($route[0]) {
         case 'login':
-
             $credential = new Api\Concretes\Credential();
             $credential->username = $_POST["username"]; //sledge00
             $credential->password = md5($_POST["password"]); //1234
             $credential->db = $client->db;
-            echo $credential->authenticate();
+	    echo $credential->authenticate();
+	    break;
         
 	case 'bet':
 	  
@@ -48,28 +48,38 @@ if (count($route) <= 2) {
             $wallet->get();
 
             $amount = $_POST["amount"];
-            $finance_type_id = $_POST['finance_type']; //3 (bet)
-            $finance = new Api\Concretes\Finance($amount, $finance_type_id);
-            $finance->db = $client->db;
-            if ($finance->post([]))
+	    $finance_type_id = $_POST['finance_type']; //3 (bet)
+
+	    if ($wallet->get()['balance']<$amount)
             {
-                $wallet->balance = $finance->payout;
-                if ($wallet->put([])) 
-                {
-                    echo Api\Utils\JsonResponse::get("Your new balance is: ".$wallet->get()['balance']."");
-                }
-                else
-                {
-                    echo Api\Utils\JsonResponse::get([]);
-                }
-            }
-            else
-            {
-                echo Api\Utils\JsonResponse::get([]);
+	        echo Api\Utils\JsonResponse::get("Not enough balance to bet!");
 	    }
+            else
+	    {
+                $finance = new Api\Concretes\Finance($amount, $finance_type_id);
+                $finance->db = $client->db;
+                if ($finance->post([]))
+                {
+                    $wallet->balance = $finance->payout;
+                    if ($wallet->put([])) 
+                    {
+                        echo Api\Utils\JsonResponse::get("Your new balance is: ".$wallet->get()['balance']."");
+                    }
+                    else
+                    {
+                        echo Api\Utils\JsonResponse::get([]);
+                    }
+                 }
+                 else
+                 {
+                    echo Api\Utils\JsonResponse::get([]);
+	         }
+	    }
+	    break;
 
 	 default:
-             echo Api\Utils\JsonResponse::get([]);
+	    echo Api\Utils\JsonResponse::get([]);
+	    break;
 
     }
 }
